@@ -24,7 +24,7 @@ from _pytest.assertion import util
 from _pytest.assertion.util import (  # noqa: F401
     format_explanation as _format_explanation,
 )
-from _pytest.compat import spec_from_file_location
+from _pytest.compat import spec_from_file_location, lru_cache
 from _pytest.pathlib import fnmatch_ex
 from _pytest.pathlib import PurePath
 
@@ -305,6 +305,7 @@ class AssertionRewritingHook(object):
             raise
         return sys.modules[name]
 
+    @lru_cache(maxsize=10000)
     def is_package(self, name):
         try:
             fd, fn, desc = self._imp_find_module(name)
